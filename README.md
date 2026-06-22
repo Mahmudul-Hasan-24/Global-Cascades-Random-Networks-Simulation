@@ -1,106 +1,130 @@
-# 🧠"A Simple Model of Global Cascades on Random Networks."¶
+# Global Cascades on Random Networks
 
-
-## 📌 Project Overview
-This project is a **simulation-based exploration of fundamental mechanisms** in social systems, implemented in Python.  
-The goal is to understand how **local interactions** between agents lead to **emergent macro-level patterns** such as consensus, polarization, and diffusion of behaviors.
-
-Specifically, this exercise implements and compares:
-- **Voter model** – how opinions spread until consensus is reached.
-- **Threshold adoption model** – how innovations/behaviors diffuse through a population.
-- **Network effects** – how network structure (random, small-world, scale-free) influences dynamics.
+> Replication of Watts (2002) threshold-based cascade model on Erdős–Rényi random networks — simulating how small local shocks trigger large-scale contagion using Python, NetworkX, and Matplotlib across 500 trials per configuration.
 
 ---
 
-## 🗂 Repository Structure
+## Project Overview
+
+This project replicates **Figures 3 and 4** from Duncan J. Watts' seminal paper *"A Simple Model of Global Cascades on Random Networks"* (PNAS, 2002). It investigates the conditions under which small, localized shocks can propagate through a network and trigger large-scale cascades — a phenomenon relevant to social contagion, financial crises, information diffusion, and epidemic spreading.
+
+Using threshold-based agent activation on Erdős–Rényi random graphs, the simulation examines how average node degree (z) and individual activation thresholds (ϕ) determine cascade size and likelihood.
+
+**Tools & Technologies:** Python · NumPy · NetworkX · Matplotlib · Jupyter Notebook
+
+---
+
+## Research Questions
+
+1. Under what conditions can a small local shock trigger a global cascade?
+2. How does average network degree (z) affect cascade size and frequency?
+3. How does threshold heterogeneity and network topology (uniform vs. scale-free) shift cascade boundaries?
+
+---
+
+## Model Description
+
+The model uses a **threshold-based cascade** mechanism on random networks:
+
+- Network generated using the **Erdős–Rényi** model (N=1000 nodes, varying average degree z)
+- Each agent starts **inactive**, except for 1 randomly chosen seed adopter
+- An agent **activates** if the fraction of active neighbors ≥ threshold ϕ
+- The cascade spreads iteratively using a BFS queue until no further activations occur
+- Cascade size is measured as the fraction of total nodes activated
+
+**Experimental parameters:**
+- Nodes: N = 1,000
+- Trials per configuration: 500
+- Average degree z: varied from sparse (z=1.05) to dense (z=6.14)
+- Threshold ϕ: varied from 0.05 to 0.30
+- Extensions: threshold heterogeneity (σ=0, 0.05, 0.1) and scale-free vs. uniform graph comparison
+
+---
+
+## Key Findings
+
+- **Higher connectivity (larger z) leads to larger and more frequent cascades** — dense networks are more vulnerable to contagion
+- **Cascade size distributions follow power laws** — log-log plots reveal slopes of -3/2 and -1/2, consistent with Watts' theoretical predictions
+- **Threshold heterogeneity expands the cascade window** — nodes with varying sensitivity allow cascades to occur at higher average threshold values
+- **Scale-free networks support cascades at lower average degree** than uniform random graphs due to highly connected hub nodes acting as accelerators
+- A **sharp phase transition** separates non-cascading from global cascading regimes
+
+---
+
+## Results Summary
+
+| Configuration | Cascade Behavior |
+|---|---|
+| z=1.05, ϕ=0.18 | Sparse cascades, power-law distributed |
+| z=6.14, ϕ=0.18 | Large, frequent global cascades |
+| σ=0 (homogeneous thresholds) | Narrow cascade window |
+| σ=0.1 (heterogeneous thresholds) | Wider cascade window, more robust spreading |
+| Scale-free network | Cascades at lower z than uniform random graphs |
+
+---
+
+## Visualizations
+
+**Figure 3 — Cumulative cascade size distributions:**
+- Log-log plot comparing cascade sizes for z=1.05 and z=6.14
+- Power-law reference lines (slopes -3/2 and -1/2) overlaid
+
+**Figure 4 — Cascade phase boundaries:**
+- (a) Effect of threshold variance σ on the cascade window (z vs ϕ)
+- (b) Comparison of uniform vs. scale-free random graph cascade boundaries
+
+---
+
+## Repository Structure
+
 ```
-├── notebooks/
-│   └── Simulation.ipynb       # Main notebook with all simulations
-├── docs/
-│   └── sample_plot.png        # Example visualization of simulation results
-└── requirements.txt           # Python dependencies
+├── Computational_Model_of_Social_System_Project1.ipynb    # Main simulation notebook
+└── README.md
 ```
 
----
-
-## 🧠 Models Implemented
-
-### 1. Voter Model
-- Agents start with binary opinions (0/1).
-- At each step, a random agent adopts a random neighbor's opinion.
-- Simulation stops when **consensus** is reached.
-
-### 2. Threshold Model
-- Agents adopt a behavior if the fraction of neighbors already adopting exceeds a threshold θ.
-- Models **contagion-like behavior** such as innovation adoption.
-
-### 3. Network Structures
-- **Erdős–Rényi (Random)**
-- **Watts–Strogatz (Small-World)**
-- **Barabási–Albert (Scale-Free)**
-
-Comparing outcomes across these networks reveals how **structure shapes dynamics**.
+> No external dataset required — all data is generated by the simulation.
 
 ---
 
-## 📊 Example Results
+## How to Run
 
-| Model        | Metric                | Key Finding |
-|-------------|---------------------|-------------|
-| Voter Model | Consensus Time       | Scale-free networks converge slowest due to hub nodes. |
-| Threshold   | Adoption Rate        | Lower thresholds → faster adoption, but only in connected networks. |
-| Mixed       | Opinion Diversity    | Small shocks keep diversity longer before consensus. |
-
-
-
----
-
-## 🛠 How to Run Locally
-
-### 1. Clone this repository
 ```bash
-git clone https://github.com/Mahmudul-Hasan-24/Simulation-Exercise.git
-cd Simulation-Exercise
+# Clone the repository
+git clone https://github.com/Mahmudul-Hasan-24/Global-Cascades-Random-Networks-Simulation.git
+
+# Install required packages
+pip install numpy matplotlib networkx jupyter
+
+# Launch the notebook
+jupyter notebook Computational_Model_of_Social_System_Project1.ipynb
 ```
 
-### 2. Create and activate a virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
-```
-
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Run the notebook
-```bash
-jupyter notebook notebooks/Simulation.ipynb
-```
+> Note: 500 trials × multiple z/ϕ configurations takes several minutes to run. Results are averaged for robustness.
 
 ---
 
-## 📦 Dependencies
-- networkx – Network generation & analysis  
-- numpy – Numerical operations  
-- matplotlib – Plotting  
-- jupyter – Notebook interface  
+## Reference
+
+Watts, D. J. (2002).
+*A simple model of global cascades on random networks.*
+Proceedings of the National Academy of Sciences, 99(9), 5766–5771.
+https://doi.org/10.1073/pnas.082090499
 
 ---
 
-## 🚀 Possible Extensions
-- Implement **stubborn agents** (zealots) to test influence of minorities.
-- Add **external shocks** that flip random nodes periodically.
-- Record and visualize **opinion distribution over time** as animation.
+## Skills Demonstrated
+
+- Agent-based modeling and threshold cascade simulation
+- Graph generation and analysis with NetworkX (Erdős–Rényi, scale-free)
+- Monte Carlo simulation (500 trials per parameter combination)
+- Power-law distribution analysis and log-log visualization
+- Replication of peer-reviewed computational results
 
 ---
 
-## 📜 License
-This project is licensed under the MIT License – see [LICENSE](LICENSE) for details.
+## Author
 
----
-
-## 👤 Author
-**Mahmudul Hasan**  
-Master’s Computational Social System (Business Analytics) at Technical University of Graz & University of Graz  
+**Mahmudul Hasan**
+M.Sc. Computational Social Systems (Business Analytics)
+Technical University of Graz & University of Graz
+[LinkedIn](https://www.linkedin.com/in/mahmudul-hasan-764307249/) · [GitHub](https://github.com/Mahmudul-Hasan-24)
